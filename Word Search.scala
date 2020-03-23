@@ -35,7 +35,7 @@ object Solution {
           for {
             deltaX <- oneDimensionDeltas
             deltaY <- oneDimensionDeltas
-            if deltaX != 0 || deltaY != 0
+            if (deltaX + deltaY)*(deltaX + deltaY) == 1
           } yield (deltaX, deltaY)
         }
       }
@@ -44,9 +44,11 @@ object Solution {
         wordLeft match {
           case doesntMatch :: _ if doesntMatch != currentStep.letter => false
           case matches :: wordLeft =>
-            currentStep.adjacent.filterNot(visited.contains).exists { nextStep =>
-              solve(nextStep, visited + nextStep, wordLeft)
-            }
+            val newVisited = visited + currentStep
+            wordLeft.isEmpty ||
+              currentStep.adjacent.filterNot(visited.contains).exists { nextStep =>
+                solve(nextStep, newVisited, wordLeft)
+              }
           case Nil => true
         }
       }
@@ -71,6 +73,8 @@ object Main extends App {
   check(small, "ABCCED", true)
   check(small, "SEE", true)
   check(small, "ABCB", false)
+  check(Array(Array('a')), "a", true)
+  check(Array(Array.fill(2)('a')), "a"*3, false)
 
   val maxN = 100
   val big = Array.fill(maxN)(Array.fill(maxN)('a'))
