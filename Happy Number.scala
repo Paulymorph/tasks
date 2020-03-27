@@ -1,12 +1,12 @@
 object Solution {
   def isHappy(n: Int): Boolean = {
-    def isHappyRecursive(n: Int, visited: Set[Int]): Boolean = {
-      if (visited.contains(n)) false
-      else if (n == 1) true
-      else isHappyRecursive(next(n), visited + n)
+    def isHappyRecursive(slow: Int, fast: Int): Boolean = {
+      if (fast == 1) true
+      else if (slow == fast) false
+      else isHappyRecursive(next(slow), next(next(fast)))
     }
-    
-    isHappyRecursive(n, Set.empty)
+
+    isHappyRecursive(n, next(n))
   }
   
   def next(n: Int): Int = {
